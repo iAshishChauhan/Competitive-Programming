@@ -1,70 +1,49 @@
-#include <iostream>
-using namespace std;
-
-void merge(int input[],int si, int mid, int ei) {
+void merge(int input[], int s, int mid, int e) {
+    int temp[e-s+1];
+    int i = s;
+    int j = mid+1;
+    //Let one part of array is from s to mid and another from mid+1 to end
+    int k = 0;
     
-    int n1 = mid - si + 1; 
-    int n2 = ei - mid;
-    
-    int L[n1], R[n2];
-    int i,j,k;
-    for(i=0;i<n1;i++) {
-        L[i] = input[si+i];
-    }
-    for(j=0;j<n2;j++) {
-        R[j] = input[mid+1+j];
-    }
-    
-    i=0;
-    j=0;
-    k=si;
-    
-    while(i<n1 && j<n2) {
-        if(L[i]<=R[j]) {
-            input[k] = L[i];
+    while(i<=mid && j<=e) {
+        if(input[i]<=input[j]) {
+            temp[k++] = input[i];
             i++;
         }
         else {
-            input[k] = R[j];
+            temp[k++] = input[j];
             j++;
         }
-        k++;
     }
     
-    while(i<n1) {
-        input[k] = L[i];
+    while(i<=mid) {
+        temp[k++] = input[i];
         i++;
-        k++;
     }
     
-    while(j<n2) {
-        input[k] = R[j];
+    while(j<=e) {
+        temp[k++] = input[j];
         j++;
-        k++;
     }
+    for(int l=s;l<=e;l++) {
+        input[l] = temp[l-s];
+    }
+    
 }
 
-void mergeSort(int input[], int si, int ei) {
-	// Write your code here
-	if(si>=ei) {
+void mergeSort1(int input[],int s, int e) {
+    if(s>=e)
         return;
-    }
-    int mid = (si+ei)/2;
     
-    mergeSort(input,si,mid);
-    mergeSort(input,mid+1,ei);
+    int mid = (s+e)/2;
     
-    merge(input,si,mid,ei);
+    mergeSort1(input,s,mid);
+    mergeSort1(input,mid+1,e);
+    
+    merge(input,s,mid,e);
 }
 
-int main() {
-	int input[1000],length;
-  	cin >> length;
-  	for(int i=0; i < length; i++)
-    cin >> input[i];
-  	mergeSort(input, 0,length-1);
-  	for(int i = 0; i < length; i++) {
-   	 	cout << input[i] << " ";
-  	}
-	
+void mergeSort(int input[], int size){
+	// Write your code here
+    mergeSort1(input,0,size-1);    
 }
